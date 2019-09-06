@@ -1,0 +1,20 @@
+﻿@model List<ItuneSystem.Controllers.HomeController.numberSongsBoughtByUser>
+
+@{
+    ViewBag.Title = "NumberOfSongsBought";
+}
+
+<h2>NumberOfSongsBought</h2>
+
+<ul>
+    @foreach (var item in Model)
+    {
+    <li>
+        the number of @item.Song bought is 
+        @item.NumberOfSales
+     
+    </li>
+    }
+</ul>
+
+

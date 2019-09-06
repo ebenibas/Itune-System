@@ -40,7 +40,7 @@ namespace ItuneSystem.Controllers
         public ActionResult Create()
         {
             ViewBag.SongId = new SelectList(db.Songs, "Id", "Name");
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Name");
+            ViewBag.UsersId = new SelectList(db.Users, "Id", "Name");
             return View();
         }
 
@@ -49,7 +49,7 @@ namespace ItuneSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,UserId,SongId,Buy,Rating")] UserSong userSong)
+        public ActionResult Create([Bind(Include = "Id,UsersId,SongId,Buy,Rating")] UserSong userSong)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace ItuneSystem.Controllers
             }
 
             ViewBag.SongId = new SelectList(db.Songs, "Id", "Name", userSong.SongId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Name", userSong.UserId);
+            ViewBag.UsersId = new SelectList(db.Users, "Id", "Name", userSong.UsersId);
             return View(userSong);
         }
 
@@ -76,7 +76,7 @@ namespace ItuneSystem.Controllers
                 return HttpNotFound();
             }
             ViewBag.SongId = new SelectList(db.Songs, "Id", "Name", userSong.SongId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Name", userSong.UserId);
+            ViewBag.UsersId = new SelectList(db.Users, "Id", "Name", userSong.UsersId);
             return View(userSong);
         }
 
@@ -85,7 +85,7 @@ namespace ItuneSystem.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,UserId,SongId,Buy,Rating")] UserSong userSong)
+        public ActionResult Edit([Bind(Include = "Id,UsersId,SongId,Buy,Rating")] UserSong userSong)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace ItuneSystem.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.SongId = new SelectList(db.Songs, "Id", "Name", userSong.SongId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Name", userSong.UserId);
+            ViewBag.UsersId = new SelectList(db.Users, "Id", "Name", userSong.UsersId);
             return View(userSong);
         }
 
@@ -132,5 +132,6 @@ namespace ItuneSystem.Controllers
             }
             base.Dispose(disposing);
         }
+       
     }
 }

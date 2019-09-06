@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Artist">
           <Key>
             <PropertyRef Name="Id" />
@@ -25,7 +25,7 @@
           <Property Name="ReleaseDate" Type="datetime" />
           <Property Name="ArtistId" Type="int" />
         </EntityType>
-        <EntityType Name="User">
+        <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -40,7 +40,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserId" Type="int" />
+          <Property Name="UsersId" Type="int" />
           <Property Name="SongId" Type="int" />
           <Property Name="Buy" Type="bit" />
           <Property Name="Rating" Type="float" />
@@ -70,21 +70,21 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserSong_User">
-          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="UserSong" Type="Self.UserSong" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="User">
+            <Principal Role="Users">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="UserSong">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="UsersId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="Artist" EntityType="Self.Artist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Song" EntityType="Self.Song" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserSong" EntityType="Self.UserSong" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Song_Artist" Association="Self.FK_Song_Artist">
             <End Role="Artist" EntitySet="Artist" />
@@ -95,12 +95,11 @@
             <End Role="UserSong" EntitySet="UserSong" />
           </AssociationSet>
           <AssociationSet Name="FK_UserSong_User" Association="Self.FK_UserSong_User">
-            <End Role="User" EntitySet="User" />
+            <End Role="Users" EntitySet="Users" />
             <End Role="UserSong" EntitySet="UserSong" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -125,30 +124,7 @@
           <Property Name="ReleaseDate" Type="DateTime" Precision="3" />
           <Property Name="ArtistId" Type="Int32" />
           <NavigationProperty Name="Artist" Relationship="Self.FK_Song_Artist" FromRole="Song" ToRole="Artist" />
-          <NavigationProperty Name="UserSongs" Relationship="Self.FK_UserSong_Song" FromRole="Song" ToRole="UserSong" />
-        </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="BirthDate" Type="DateTime" Precision="3" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="UserSongs" Relationship="Self.FK_UserSong_User" FromRole="User" ToRole="UserSong" />
-        </EntityType>
-        <EntityType Name="UserSong">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="SongId" Type="Int32" />
-          <Property Name="Buy" Type="Boolean" />
-          <Property Name="Rating" Type="Double" />
-          <NavigationProperty Name="Song" Relationship="Self.FK_UserSong_Song" FromRole="UserSong" ToRole="Song" />
-          <NavigationProperty Name="User" Relationship="Self.FK_UserSong_User" FromRole="UserSong" ToRole="User" />
+          <NavigationProperty Name="UserSongs" Relationship="Model.FK_UserSong_Song" FromRole="Song" ToRole="UserSong" />
         </EntityType>
         <Association Name="FK_Song_Artist">
           <End Role="Artist" Type="Self.Artist" Multiplicity="0..1" />
@@ -162,9 +138,50 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityContainer Name="Itune_SystemEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Artists" EntityType="Self.Artist" />
+          <EntitySet Name="Songs" EntityType="Self.Song" />
+          <AssociationSet Name="FK_Song_Artist" Association="Self.FK_Song_Artist">
+            <End Role="Artist" EntitySet="Artists" />
+            <End Role="Song" EntitySet="Songs" />
+          </AssociationSet>
+          <EntitySet Name="Users" EntityType="Model.User" />
+          <EntitySet Name="UserSongs" EntityType="Model.UserSong" />
+          <AssociationSet Name="FK_UserSong_Song" Association="Model.FK_UserSong_Song">
+            <End Role="Song" EntitySet="Songs" />
+            <End Role="UserSong" EntitySet="UserSongs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserSong_User" Association="Model.FK_UserSong_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserSong" EntitySet="UserSongs" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BirthDate" Type="DateTime" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserSongs" Relationship="Model.FK_UserSong_User" FromRole="User" ToRole="UserSong" />
+        </EntityType>
+        <EntityType Name="UserSong">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UsersId" Type="Int32" />
+          <Property Name="SongId" Type="Int32" />
+          <Property Name="Buy" Type="Boolean" />
+          <Property Name="Rating" Type="Double" />
+          <NavigationProperty Name="Song" Relationship="Model.FK_UserSong_Song" FromRole="UserSong" ToRole="Song" />
+          <NavigationProperty Name="User" Relationship="Model.FK_UserSong_User" FromRole="UserSong" ToRole="User" />
+        </EntityType>
         <Association Name="FK_UserSong_Song">
-          <End Role="Song" Type="Self.Song" Multiplicity="0..1" />
-          <End Role="UserSong" Type="Self.UserSong" Multiplicity="*" />
+          <End Type="Model.Song" Role="Song" Multiplicity="0..1" />
+          <End Type="Model.UserSong" Role="UserSong" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Song">
               <PropertyRef Name="Id" />
@@ -175,35 +192,17 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_UserSong_User">
-          <End Role="User" Type="Self.User" Multiplicity="0..1" />
-          <End Role="UserSong" Type="Self.UserSong" Multiplicity="*" />
+          <End Type="Model.User" Role="User" Multiplicity="0..1" />
+          <End Type="Model.UserSong" Role="UserSong" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="UserSong">
-              <PropertyRef Name="UserId" />
+              <PropertyRef Name="UsersId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="Itune_SystemEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Artists" EntityType="Self.Artist" />
-          <EntitySet Name="Songs" EntityType="Self.Song" />
-          <EntitySet Name="Users" EntityType="Self.User" />
-          <EntitySet Name="UserSongs" EntityType="Self.UserSong" />
-          <AssociationSet Name="FK_Song_Artist" Association="Self.FK_Song_Artist">
-            <End Role="Artist" EntitySet="Artists" />
-            <End Role="Song" EntitySet="Songs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserSong_Song" Association="Self.FK_UserSong_Song">
-            <End Role="Song" EntitySet="Songs" />
-            <End Role="UserSong" EntitySet="UserSongs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserSong_User" Association="Self.FK_UserSong_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="UserSong" EntitySet="UserSongs" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -234,23 +233,23 @@
           </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="Model.User">
-              <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
+              <MappingFragment StoreEntitySet="Users">
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserSongs">
             <EntityTypeMapping TypeName="Model.UserSong">
               <MappingFragment StoreEntitySet="UserSong">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="SongId" ColumnName="SongId" />
-                <ScalarProperty Name="Buy" ColumnName="Buy" />
                 <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="Buy" ColumnName="Buy" />
+                <ScalarProperty Name="SongId" ColumnName="SongId" />
+                <ScalarProperty Name="UsersId" ColumnName="UsersId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

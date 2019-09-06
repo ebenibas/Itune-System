@@ -15,7 +15,7 @@ namespace ItuneSystem
     public partial class UserSong
     {
         public int Id { get; set; }
-        public Nullable<int> UserId { get; set; }
+        public Nullable<int> UsersId { get; set; }
         public Nullable<int> SongId { get; set; }
         public Nullable<bool> Buy { get; set; }
         public Nullable<double> Rating { get; set; }

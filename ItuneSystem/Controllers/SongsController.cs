@@ -7,17 +7,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ItuneSystem;
+using NLog;
 
 namespace ItuneSystem.Controllers
 {
     public class SongsController : Controller
     {
         private Itune_SystemEntities db = new Itune_SystemEntities();
-
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         // GET: Songs
         public ActionResult Index()
         {
             var songs = db.Songs.Include(s => s.Artist);
+            logger.Info("informational message");
             return View(songs.ToList());
         }
 
